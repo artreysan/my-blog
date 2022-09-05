@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install BSPWM </title>
+</head>
+<body>
+    <h1>Install BSPWM + Polybar ArchLinux</h1>
+    <h2>Package for configuration</h2>
+    <pre><code>sudo pacman -S nitrogen git dmenu</code></pre>
+
+    <h2>Install bspwm and dependences</h2>
+    <pre><code>sudo pacman -S bspwm sxhkd</code></pre>
+
+    <h3>Configuration BSPWM</h3>
+    <pre><code>
+    mkdir ~/.config/bspwm<br>
+    cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/<br>
+    </code></pre>
+
+    <h3>Configure SXHKD</h3>
+    <pre><code>
+    mkdir ~/.config/sxhkd<br>
+    cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/<br>
+    </code></pre>
+    <p>Edit the file <code>~/.config/sxhkdrc</code></p>
+    <p>Terminal configartion</p>
+    <pre><code>
+    ...        
+    # terminal emulator
+    super + Return
+            alacritty
+    ...        
+    </code></pre>
+    <p>App Finder</p>
+    <pre><code>
+    ... 
+    # program launcher
+    super + D 
+            dmenu_run
+    ...
+    </code></pre>
+
+
+    <h2>Install Polybar</h2>
+    <pre><code>sudo pacman -S polybar</code></pre>
+    <h3>Configuration</h3>
+    <pre><code>
+    mkdir ~/.config/polybar
+    cp /usr/share/doc/polybar/examples/config.ini ~/.config/polybar/
+    </code></pre>
+    <p>Create and write in file <code>~/.config/polybar/launch.sh</code></p>
+    <pre><code>
+    #!/usr/bin/env bash
+
+    # Terminate already running bar instances
+    # If all your bars have ipc enabled, you can use 
+    polybar-msg cmd quit
+    # Otherwise you can use the nuclear option:
+    # killall -q polybar
+
+    # Launch bar1 and bar2
+    echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log
+    polybar example 2>&1 | tee -a /tmp/polybar1.log & disown
+    #polybar bar2 2>&1 | tee -a /tmp/polybar2.log & disown
+
+    echo "Bars launched..."
+    </code></pre>
+    <p>Make it executable:</p>
+    <pre><code>
+    chmod +x $HOME/.config/polybar/launch.sh
+    </code></pre>
+    <p>Add the following line to <code>~/.config/bspwm/bspwmrc</code></p>
+    <pre><code>
+    $HOME/.config/polybar/launch.sh
+    </code></pre>
+
+    <h2>Custome Configuration</h2>
+    <a href="https://github.com/artreysan/bspwmConfig">GitHub</a>
+
+</body>
+</html>

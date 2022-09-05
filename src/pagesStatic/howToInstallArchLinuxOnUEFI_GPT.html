@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Install Arch Linux on UEFI/GPT</title>
+</head>
+<body>
+    <h1>Setting</h1>
+    <h2>Change keybord language</h2>
+    Latinoamerican Spanish (Mexico):
+    <pre><code>
+        loadkeys la-latin1
+    </code></pre>
+    Default English:
+    <pre><code>
+        loadkeys en
+    </code></pre>
+    <h2>Charging the font</h2>
+    <pre>
+        <code class="language-bash">
+            setfont /usr/share/kdb/consolefonts/ter-c20b.psf.gz 
+        </code>
+    </pre>
+    <h2>Verify that you are booted in EFI mode</h2>
+    <p>If this folder doesn't exist than that  means that you are not booted in EFI mode. </p>
+    <pre>
+        <code>
+            ls /sys/firmware/efi/efivars
+        </code>
+    </pre>
+    <p>You will have to charge your boot mode to boot in UEFI mode instead of Legacy mode. </p>
+
+    <h2>For WiFi connetions:</h2>
+    <pre><code>iwctl</code></pre>
+    <h3>List Devices</h3>
+    <pre><code>
+        device list
+    </code></pre>
+    <h3>Scan the devices</h3>
+    <pre><code>
+        station &#60;device&#62; get-network 
+    </code></pre>
+    <pre><code>
+        station &#60;device&#62; connect &#60;SSID&#62;
+    </code></pre>
+
+    <h2>Update the system clock</h2>
+    <pre><code>
+        timedatectl set-ntp true
+    </code></pre>
+    
+    <h2>Partition the disk:</h2>
+    <h3>List disk</h3>
+    <pre><code>lsblk</code></pre>
+
+    <h3>Create a GPT partition table</h3>
+    <h3>EFI partition</h3>
+    <pre><code>
+        fdisk /dev/sda<br>
+        g<br>
+        n<br>
+        [Enter]<br>
+        [Enter]<br>
+        +512M<br>
+    </code></pre>
+
+    <h3>Swap Partition</h3>
+    <pre><code>
+        n<br>
+        [Enter]<br>
+        [Enter]<br>
+        +3G<br>
+    </code></pre>
+
+    <h3>Home Partition</h3>
+    <pre><code>
+        n<br>
+        [Enter]<br>
+        [Enter]<br>
+        +15GB<br>
+    </code></pre>
+
+    <h3>Root Partition</h3>
+    <p>Rest of Space</p>
+    <pre><code>
+        n<br>   
+        [Enter]<br>
+        [Enter]<br>
+        [Enter]<br>
+    </code></pre>
+    <h3>Look partitions and exit:</h3>
+    <pre><code>
+        p<br>
+        w<br>
+    </code></pre>
+
+    <h2>Format the Partitions:</h2> 
+    <h3>EFI Partition</h3>
+    <pre><code>
+        mkfs.fat -F32 /dev/sda1
+    </code></pre>
+
+    <h3>Swap Partition</h3>
+    <pre><code>
+        mkswap /dev/sda2<br>
+        swapon
+    </code></pre>   
+
+    <h3>Home Partition</h3>
+    <pre><code>
+        mkfs.ext4 /dev/sda3
+    </code></pre>
+
+    <h3>Root Partition</h3>
+    <pre><code>
+        mkfs.ext4 /dev/sda3
+    </code></pre>
+
+    <h2>Mount the Partitions</h2>
+
+    <h3>Swap Partition</h3>
+    <pre><code>
+        swapon /dev/sda2<br>
+    </code></pre>   
+
+    <h3>Home Partition</h3>
+    <pre><code>
+        mkdir /mnt/home/<br>
+        mount /dev/sda3 /mnt/home/
+    </code></pre>
+
+    <h3>Root Partition</h3>
+    <pre><code>
+        mount /dev/sda4 /mnt 
+    </code></pre>
+
+    <h2>Install essential packages on /mnt/</h2>
+    <pre><code>
+        pactrap /mnt base linux linux-firmware vim
+    </code></pre>
+    <h3>Note: If you have the next error:</h3>
+    <h4>ERROR: Failed to install packages to new root</h4>
+    <pre><code>
+        sudo pacman -S archlinux-keyring<br>
+        sudo pacman -Syy<br>
+        pactrap /mnt base linux linux-firmware vim
+    </code></pre>
+
+    <h2>Generate fstab file</h2>
+    <pre><code>
+        genfstab -U /mnt >> /mnt/etc/fstab
+    </code></pre>
+
+    <h2>Into to System Installed</h2>
+    <pre><code>
+        arch-chroot /mnt
+    </code></pre>
+
+    <h3>Set your timezone</h3>
+    <pre><code>
+        ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
+    </code></pre> 
+    <h3>Sync the hardware clock with timezone</h3>
+    <pre><code>
+        hwclock --systohc
+    </code></pre>
+    <h3>Set the locale</h3>
+    <p>Edit document:</p>
+    <pre><code>
+        nano /etc/locale.gen
+    </code></pre>
+    <pre><code>
+        #Uncommented 
+        en_US.UTF-8 UTF-8
+        #And Save changes
+    </code></pre>
+    <p>Execute the next command:</p>
+    <pre><code>
+        locale-gen
+    </code></pre>
+    <p>Add your locale to locale.conf</p>
+    <pre><code>
+        nano /etc/locale.conf
+    </code></pre>
+    <pre><code>
+        #Add the next text
+        LANG=en_US.UTF8
+    </code></pre>
+
+    <h2>Configure HostName</h2>
+    <pre><code>
+        nano /etc/hostname
+    </code></pre>
+    <p>Remplace "arch" with your name of machine:</p>
+    <pre><code>
+        #Name of machine
+        arch
+    </code></pre>
+    <h3>Configure the hosts</h3>
+    <pre><code>
+        nano /etc/hosts
+    </code></pre>
+    <p>Remplace "arch" with your name of machine:</p>
+    <pre><code>
+        # Static table lookup for hostnames
+        # See hosts(5) for details.
+
+        127.0.0.1       localhost
+        ::1             localhost
+        127.0.0.1       arch.localdomain arch
+    </code></pre>
+    <h2>Generate initramfs</h2>
+    <pre><code>
+        mkinitcpio -P
+    </code></pre>
+    <h2>Install grub and other package</h2>
+    <pre><code>
+        pacman -S grub base-devel efibootmgr os-prober mtools dosfstools linux-headers networkmanager nm-connection-editor pulseaudio pavucontrol dialog
+    </code></pre>
+    <h2>Create EFI boot directory</h2>
+    <h3>Mount EFI partition to the directory</h3>
+    <pre><code>
+        mkdir /boot/EFI<br>
+        mount /dev/sda1 /boot/EFI<br>
+        grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+    </code></pre>
+    <h3>Genere grub config</h3>
+    <pre><code>
+        grub-mkconfig -o /boot/grub/grub.cfg
+    </code></pre>
+    <h2>Enable Network Manager to run on startup</h2>
+    <pre><code>
+        systemctl enable NetworkManager
+    </code></pre>
+    <h2>Add new user</h2>
+    <p>Remplace "arturo" with your name:</p>
+    <pre><code>
+        useradd -m -G wheel arturo<br>
+        EDITOR=nano visudo
+    </code></pre>
+    <p>Uncomment in /etc/sudoers.d WHEEL</p>
+    <pre><code>
+        #Uncommented
+        #...
+        %wheel ALL=(ALL) ALL
+        #...
+        #And Save
+    </code></pre>
+    <h3>Set the password for the new user</h3>
+    <pre><code>
+        passwd arturo
+    </code></pre>
+    <h3>Set the password for root</h3>
+    <pre><code>
+        passwd root
+    </code></pre>
+    <h2>Install Display Driver</h2>
+    <pre><code>
+       #Intel 
+       sudo pacman -S xf86-video-intel
+       #AMD
+       sudo pacman -S xf86-video-amdgpu
+       #NVidia  
+       sudo pacman -S nvidia nvidia-utils
+    </code></pre>
+
+    <h2>Install display server</h2>
+    <pre><code>
+        sudo pacman -S xorg
+    </code></pre>
+
+    <h2>Install display manager</h2> 
+    <h3>Ly Display Manager</h3>
+    <pre><code>
+        https://github.com/fairyglade/ly
+    </code></pre>
+
+    <h2>Install Windows Manager</h2>
+    <pre><code>
+        sudo pacman -S xfce4 xfce4-goodies
+    </code></pre>
+
+    <h2>Install OpenSSH</h2>
+    <pre><code>
+        sudo pacman -Sy<br>
+        sudo pacman -S openssh<br>
+        sudo systemctl status sshd<br>
+        sudo systemctl start sshd<br>
+        sudo systemctl enable sshd<br>
+    </code></pre>
+</body>
+</html>

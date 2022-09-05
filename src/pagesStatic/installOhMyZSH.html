@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <pre><code>
+        sudo pacman -S zsh
+    </code></pre>
+    <pre><code>
+        zsh --version
+    </code></pre>
+    <pre><code>
+        zsh
+        This is the Z Shell configuration function for new users,
+        zsh-newuser-install.
+        You are seeing this message because you have no zsh startup files
+        (the files .zshenv, .zprofile, .zshrc, .zlogin in the directory
+        ~).  This function can help you with a few settings that should
+        make your use of the shell easier.
+
+        You can:
+
+        (q)  Quit and do nothing.  The function will be run again next time.
+
+        (0)  Exit, creating the file ~/.zshrc containing just a comment.
+            That will prevent this function being run again.
+
+        (1)  Continue to the main menu.
+
+        --- Type one of the keys in parentheses ---
+    </code></pre>
+    <p>Presionamos la opcion 1 y luego 0 para crear el archivo <code>~/.zshrc</code></p>
+
+    <p>Instalamos Oh-My-ZSH</p>
+    <pre><code>
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    </code></pre>
+    <p>More information: <a href="https://github.com/ohmyzsh/ohmyzsh">GitHub</a></p>
+
+</body>
+</html>

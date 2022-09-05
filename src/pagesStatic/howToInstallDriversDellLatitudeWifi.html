@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Install Drivers WiFi Dell Latitude E6420</title>
+</head>
+<body>
+    <h1>How to Install Drivers WiFi Dell Latitude E6420</h1> 
+    <p>Search our card of wireless</p>
+    <pre><code>
+        sudo dmesg<br>
+        sudo dmesg | grep -i b43
+    </code></pre>
+    <h2>Finding out your chipset / wireless card name on a Arch Linux</h2>
+    <pre><code>
+        sudo lspci<br>
+        sudo lspci | grep -i broadcom
+    </code></pre>
+
+    <p>If you card chipset is broadcom install</p>
+    <pre><code>
+        sudo pacman -S broadcom-wl-dkms 
+    </code></pre>
+    <p>Info: https://archlinux.org/packages/community/x86_64/broadcom-wl-dkms/</p>
+    <p>Then reboot the system</p>
+    <pre><code>
+        sudo reboot
+    </code></pre>
+    <h2>Verify and connect to the Wireless network</h2>
+    <pre><code>
+        ip a s <br>
+        sudo pacman -S lshw<br>
+        sudo lshw -C network -short<br>
+        nmtui<br>
+    </code></pre>
+</body>
+</html>

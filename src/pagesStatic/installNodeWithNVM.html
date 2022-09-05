@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Installed NodeJS with NVM (Node Version Manager)</h1>    
+    <p> For install NodeJS in Linux we need to have installed, CURL and BASH</p>
+    <pre><code>pacman -S curl bash</code></pre>
+    <p> After execute the follow command:</p>
+    <pre><code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash</code></pre>
+    <p>Update the configuration file in ".bashrc" with</p>
+    <pre><code>source ~/.bashrc</code></pre>
+    <p> Or if you have Oh-My-ZSH copy and paste the follow text in ".zshrc":</p>
+    <pre><code>
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    </code></pre>
+    <p>After execute the follow command: <code>source ~/.zshrc</code></p>
+    
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Adding Remote in Repository Existing</h1>
+    <ul>
+        <li>1. Create repository</li>
+        <li>2. Copy url of repository: example ===> <a> https://github.com/beartree-ars/prueba-git02.git</a></li>
+        
+    </ul>
+    <h2>Inside in Proyect</h2> 
+    <p>Created file "README.md"</p>
+    <pre><code>touch README.md</code></pre>
+
+    <p>In folder existing execute:</p>
+    <pre><code>git init</code></pre>
+    
+    
+    
+    <p>Add all files in Staging Area with</p>
+    <pre><code>add .</code></pre>
+   
+    <p>Add commit:</p>
+    <pre><code>git commit -m "----Message----"</code></pre>
+  
+    <p>Change branch name to MAIN: </p>
+    <pre><code>git branch -M main </code></pre>
+ 
+    <p>Add Remote to repository  <a>https://github.com/beartree-ars/prueba-git02.git</a></p>
+    <pre><code>git remote add origin https://github.com/beartree-ars/prueba-git02.git</code></pre>
+    <p>Send the files to Remote Repository</p>
+    <pre><code>git push -u origin main</code></pre> 
+    
+</body>
+</html>
