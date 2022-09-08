@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Install MariaDB in ArchLInux</h1>
+    <h2>Install</h2>
+    <p>Execute the follwing command:</p>
+    <pre><code>
+        sudo pacman -Syyu
+    </code></pre>
+    <p>Now install MariaDB with the following command:</p>
+        <pre><code>
+            sudo pacman -S mariadb
+        </code></pre>
+
+    <p>Before starting the MariaDB service, initialize the database 
+        with the below command. You may also change the data directory 
+        of your choice, provided you set <code>datadir=YOUR_DATADIR</code> under 
+        the section <code>[mysqld]</code> of <code>/etc/my.cnf.d/server.cnf</code>.</p>
+        <pre><code>
+            sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+        </code></pre>
+
+    <p>Verify if the MDB is run with:</p>
+    <pre><code>sudo systemctl status mariadb</code></pre>
+    <p>Exit:</p>
+    <pre><code>
+        ○ mariadb.service - MariaDB 10.9.2 database server
+            Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; preset:>
+            Active: inactive (dead)
+            Docs: man:mariadbd(8)
+                    https://mariadb.com/kb/en/library/systemd/
+    </code></pre>
+    <p>If is disabled execute the following command:</p>
+    <pre><code>
+        systemctl enable --now mariadb
+    </code></pre>
+    <p>Exit:</p>
+    <pre><code>
+        Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
+    </code></pre>
+
+    <p>Verify the status of service with the following command any more:</p>
+    <pre><code>
+        sudo systemctl status mariadb
+    </code></pre>
+    <p>Exit</p>
+    <pre><code>
+    ○ mariadb.service - MariaDB 10.9.2 database server
+        Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; preset: >
+        Active: inactive (dead)
+        Docs: man:mariadbd(8)
+                https://mariadb.com/kb/en/library/systemd/
+    lines 1-5/5 (END)
+    </code></pre>
+    <p>After of the intalled MariaDB execute the follwing command: </p>
+    <pre><code>
+        sudo mysql_secure_installation 
+    </code></pre>
+    <p>Exit</p>
+    <pre><code>
+        NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
+      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+    In order to log into MariaDB to secure it, we'll need the current
+    password for the root user. If you've just installed MariaDB, and
+    haven't set the root password yet, you should just press enter here.
+
+    Enter current password for root (enter for none):
+    </code></pre>
+    <p>Press  Intro</p>
+
+    <p>Create password for root user:</p>
+    <pre><code>
+        OK, successfully used password, moving on...
+
+        Setting the root password or using the unix_socket ensures that nobody
+        can log into the MariaDB root user without the proper authorisation.
+
+        You already have your root account protected, so you can safely answer 'n'.
+
+        Switch to unix_socket authentication [Y/n] y
+        Enabled successfully!
+        Reloading privilege tables..
+        ... Success!
+
+
+        You already have your root account protected, so you can safely answer 'n'.
+
+        Change the root password? [Y/n] y
+        New password:
+        Re-enter new password:
+        Password updated successfully!
+        Reloading privilege tables..
+        ... Success!
+
+        By default, a MariaDB installation has an anonymous user, allowing anyone
+        to log into MariaDB without having to have a user account created for
+        them.  This is intended only for testing, and to make the installation
+        go a bit smoother.  You should remove them before moving into a
+        production environment.
+    </code></pre>
+
+    <p>After of password answer the following form:</p>
+    <pre><code>
+        Remove anonymous users? [Y/n] y
+        ... Success!
+
+        Normally, root should only be allowed to connect from 'localhost'.  This
+        ensures that someone cannot guess at the root password from the network.
+
+        Disallow root login remotely? [Y/n] y
+        ... Success!
+
+        By default, MariaDB comes with a database named 'test' that anyone can
+        access.  This is also intended only for testing, and should be removed
+        before moving into a production environment.
+
+        Remove test database and access to it? [Y/n] y
+        - Dropping test database...
+        ... Success!
+        - Removing privileges on test database...
+        ... Success!
+
+        Reloading the privilege tables will ensure that all changes made so far
+        will take effect immediately.
+
+        Reload privilege tables now? [Y/n] y
+        ... Success!
+
+        Cleaning up...
+
+        All done!  If you've completed all of the above steps, your MariaDB
+        installation should now be secure.
+
+        Thanks for using MariaDB!
+    </code></pre>
+
+     <p>Look the vesion installed:</p>
+     <pre><code>
+        mysql --version 
+     </code></pre>
+     <p>Enter in MariaDB</p>
+     <pre><code>
+        sudo mysql
+     </code></pre>
+     <h2>Create New User</h2>
+     <p>Create the new user whit the following command in MariaDB:</p>
+     <pre><code> 
+        MariaDB[(none)]> GRANT ALL ON *.* TO 'arturo'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+     </code></pre>
+     <p>After execute the following command:</p>
+     <pre><code>        MariaDB[(none)]> FLUSH PRIVILEGES;</code></pre>
+     <p>Access with new user in terminal:</p>
+     <pre><code>mysql -u arturo -p</code></pre>
+</body>
+</html>

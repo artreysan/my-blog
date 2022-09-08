@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Create DOMPDF in Laravel</h1>
+
+    <h2>Create Fake data:</h2>
+    <p>UserFactory comes by default in each new Laravel project, in this case, only we need to go to database/seeders/DatabaseSeeder.php and uncomment this line</p>
+    <p>In proyect laravel, uncoomment in file ./database/seeders/DatabaseSeeder.php
+       <code>\App\Models\User::factory(10)->create();</code> 
+    </p>
+
+    <pre><code>
+    public function run()
+    {
+        \App\Models\User::factory(10)->create();
+
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+    }
+    </code>
+    </pre>
+    <p>Execute command: </p>
+    <pre><code>
+        php artisan migrate:fresh --seed
+    </code></pre> 
+    <h2>Install Laravel DOMPDF</h2>
+    <p>Execute the following command:</p>
+    <pre><code>
+        composer require barryvdh/laravel-dompdf
+    </code></pre>
+    
+    <P>After updating composer in file <code>composer require barryvdh/laravel-dompdf</code> in the section ServiceProvider</P>
+    <pre><code>
+        ... 
+
+
+        /*
+        * Application Service Providers...
+        *
+        */
+       //Libreria para generar archivos pdf
+       Barryvdh\DomPDF\ServiceProvider::class,
+       App\Providers\AppServiceProvider::class,
+       App\Providers\AuthServiceProvider::class,
+       // App\Providers\BroadcastServiceProvider::class,
+       App\Providers\EventServiceProvider::class,
+       App\Providers\RouteServiceProvider::class,
+
+       ...
+
+    </code></pre>
+
+    <h2>Create User Controller </h2>
+    <p>I'll create a new UserController, execute the following command:</p>
+    <pre><code>php artisan make:controller UserController</code></pre>
+
+    <h1>Example</h1>
+    <p>Create two files in <code>./resourse/views/user</code></p>
+    <pre><code>
+        touch index.blade.php
+        touch download.blade.php
+    </code></pre>
+    <p>In <code>index.blade.php</code> conteiner the next:</p>
+    <pre class="line-numbers"><code class="language-markup">
+        <!doctype html>
+        <html lang="en">
+          <head>
+            <title>Laravel</title>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        </head>
+          <body>
+              <div class="container py-5">
+                  <div class="row">
+                      <div class="col-xl-12 text-right">
+                          <a href="{{ route('download-pdf') }}" class="btn btn-success btn-sm">Export to PDF</a>
+                      </div>
+                  </div>
+        
+                  <div class="card mt-4">
+                      <div class="card-header">
+                            <h5 class="card-title font-weight-bold">DOMPDF Tutorial</h4>
+                      </div>
+        
+                      <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+        
+                                <tbody>
+                                    @forelse ($users as $user)
+                                        <tr>
+                                            <td>{{ $user->id }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                        </tr>
+                                    @empty
+        
+                                    @endforelse
+                                </tbody>
+                            </table>
+                      </div>
+                  </div>
+              </div>
+          </body>
+        </html>        
+    </code></pre>
+
+    <p>In <code>pdf.blade.php</code> container the next: </p>
+    <pre><code>
+        <!doctype html>
+<html lang="en">
+
+<head>
+    <title>Laravel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        table {
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <h5 class=" font-weight-bold">DOMPDF Tutorial</h5>
+        <table class="table table-bordered mt-5">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                </tr>
+                @empty
+
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+        
+    </code></pre>
+
+    <p>In <code>./routes/web.phṕ</code> add the following script for the routes </p>
+    <pre><code>
+        ROute::get('/', [UserController::class, 'index']);
+        ROute::get('download-pdf', [UserController::class, 'downloadPDF'])->name('download');
+    </code></pre>
+    <p>Now We move in ./app/Http/Controllers/UserController.php</p>
+    <p>And create the method index</p>
+    <pre>
+        <code>
+            <?php
+            namespace App\Http\Controllers;
+
+            use Illuminate\Http\Request;
+            use Barryvdh\DomPDF\Facade as PDF;
+            use App\Models\User;
+
+            class UserController extends Controller
+            {
+                public function Index(){
+                    $user = User::all();
+                    return view('user.index', compact('users'));
+                }
+                /**
+                * Export content to PDF with View
+                *
+                * @return void
+                */
+                public function downloadPdf(){
+                    $users = User::all();
+                    view()->share('users.pdf',$users);
+                    $pdf = PDF::loadView('users.pdf', ['users' => $users]);
+                    return $pdf->download('users.pdf');
+                }
+            }
+        </code>
+    </pre>
+     
+    
+
+</body>
+</html>
+
+
